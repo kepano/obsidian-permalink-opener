@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "permalink-opener",
+	"name": "Permalink Opener",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Opens URLs based on a permalink or slug in the file properties",
+	"author": "@kepano",
+	"authorUrl": "https://www.twitter.com/kepano",
+	"fundingUrl": "https://www.buymeacoffee.com/kepano",
 	"isDesktopOnly": false
 }
