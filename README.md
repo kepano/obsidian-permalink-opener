@@ -7,3 +7,5 @@ Very simple plugin with three settings:
 - Development site base URL, for Jekyll you might use `http://127.0.0.1:4000`
 
 Use the command palette or hotkeys to open the current page. If no permalink is set the title is slugified using kebab case.
+
+![Permalink Opener](images/screenshot.png)
