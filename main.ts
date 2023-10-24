@@ -23,41 +23,46 @@ export default class Opener extends Plugin {
 		await this.loadSettings();
 
 		this.addCommand({
-			id: 'permalink-open-dev-url',
+			id: 'open-dev-url',
 			name: 'Open page on development site',
-
 			callback: () => {
-				let file = app.workspace.getActiveFile();
-				let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-				let name = file.basename;
-				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
-				if (!permalink) {
-					console.log('No permalink found, using filename: ' + name);
-					permalink = name.toLowerCase().split(' ').join('-');
+				let file = this.app.workspace.getActiveFile();
+				if (file) {
+					let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+					let name = file.basename;
+					let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
+					if (!permalink) {
+						console.log('No permalink found, using filename: ' + name);
+						permalink = name.toLowerCase().split(' ').join('-');
+					}
+					let url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+					openUrl(url);
+					console.log('Opening dev site: ' + url);
+				} else {
+					console.warn("No active file found");
 				}
-
-				let url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
-				openUrl(url);
-				console.log('Opening dev site: ' + url);
 			}
 		});
 
 		this.addCommand({
-			id: 'permalink-open-prod-url',
+			id: 'open-prod-url',
 			name: 'Open page on live site',
-
 			callback: () => {
-				let file = app.workspace.getActiveFile();
-				let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-				let name = file.basename;
-				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
-				if (!permalink) {
-					console.log('No permalink found, using filename: ' + name);
-					permalink = name.toLowerCase().split(' ').join('-');
+				let file = this.app.workspace.getActiveFile();
+				if (file) {
+					let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+					let name = file.basename;
+					let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
+					if (!permalink) {
+						console.log('No permalink found, using filename: ' + name);
+						permalink = name.toLowerCase().split(' ').join('-');
+					}
+					let url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+					openUrl(url);
+					console.log('Opening live site: ' + url);
+				} else {
+					console.warn("No active file found");
 				}
-				let url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
-				openUrl(url);
-				console.log('Opening live site: ' + url);
 			}
 		});
 
