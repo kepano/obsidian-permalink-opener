@@ -1,7 +1,7 @@
 {
 	"id": "permalink-opener",
 	"name": "Permalink Opener",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "Opens URLs based on a permalink or slug in the file properties",
 	"author": "@kepano",

@@ -25,44 +25,38 @@ export default class Opener extends Plugin {
 		this.addCommand({
 			id: 'open-dev-url',
 			name: 'Open page on development site',
-			callback: () => {
+			checkCallback: (checking: boolean) => {
 				let file = this.app.workspace.getActiveFile();
-				if (file) {
-					let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-					let name = file.basename;
-					let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
-					if (!permalink) {
-						console.log('No permalink found, using filename: ' + name);
-						permalink = name.toLowerCase().split(' ').join('-');
-					}
-					let url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
-					openUrl(url);
-					console.log('Opening dev site: ' + url);
-				} else {
-					console.warn("No active file found");
+				if (!file) return false;
+				if (checking) return true;
+				let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+				let name = file.basename;
+				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
+				if (!permalink) {
+					permalink = name.toLowerCase().split(' ').join('-');
 				}
+				let url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+				openUrl(url);
+				return true;
 			}
 		});
 
 		this.addCommand({
 			id: 'open-prod-url',
 			name: 'Open page on live site',
-			callback: () => {
+			checkCallback: (checking: boolean) => {
 				let file = this.app.workspace.getActiveFile();
-				if (file) {
-					let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-					let name = file.basename;
-					let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
-					if (!permalink) {
-						console.log('No permalink found, using filename: ' + name);
-						permalink = name.toLowerCase().split(' ').join('-');
-					}
-					let url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
-					openUrl(url);
-					console.log('Opening live site: ' + url);
-				} else {
-					console.warn("No active file found");
+				if (!file) return false;
+				if (checking) return true;
+				let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+				let name = file.basename;
+				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
+				if (!permalink) {
+					permalink = name.toLowerCase().split(' ').join('-');
 				}
+				let url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+				openUrl(url);
+				return true;
 			}
 		});
 
@@ -81,6 +75,7 @@ export default class Opener extends Plugin {
 		await this.saveData(this.settings);
 	}
 }
+
 
 class OpenerSettingTab extends PluginSettingTab {
 	plugin: Opener;
