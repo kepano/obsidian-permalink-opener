@@ -1,4 +1,4 @@
-Simple Obsidian plugin that opens URLs based on a permalink or slug in the file properties. This is useful if you use a static site generator such as Jekyll, Hugo, Eleventy, etc.
+Simple Obsidian plugin that opens URLs based on a permalink or slug in the file properties. This is useful if you use a static site generator such as Jekyll, Hugo, Eleventy, Astro, etc.
 
 Very simple plugin with three settings:
 
