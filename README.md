@@ -2,7 +2,7 @@ Simple Obsidian plugin that opens URLs based on a permalink or slug in the note 
 
 Very simple plugin with three settings:
 
-- Permalink property name, defines the frontmattmer property that you use. Defaults to `permalink` but you can set it to `slug` or something else.
+- Permalink property name, defines the frontmatter property that you use. Defaults to `permalink` but you can set it to `slug` or something else.
 - Live site base URL, e.g. `https://yourdomain.com`
 - Development site base URL, for Jekyll you might use `http://127.0.0.1:4000`
 
