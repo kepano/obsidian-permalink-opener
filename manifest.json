@@ -3,7 +3,7 @@
 	"name": "Permalink Opener",
 	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
-	"description": "Opens URLs based on a permalink or slug in the file properties",
+	"description": "Opens URLs based on a permalink or slug in the file properties.",
 	"author": "@kepano",
 	"authorUrl": "https://www.twitter.com/kepano",
 	"fundingUrl": "https://www.buymeacoffee.com/kepano",
