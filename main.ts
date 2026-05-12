@@ -1,4 +1,4 @@
-import { App, FrontMatterCache, parseFrontMatterEntry, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
+import { App, parseFrontMatterEntry, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface OpenerSettings {
 	keyName: string;
@@ -97,7 +97,6 @@ class OpenerSettingTab extends PluginSettingTab {
 				.setPlaceholder('permalink')
 				.setValue(this.plugin.settings.keyName)
 				.onChange(async (value) => {
-					console.log('Key name: ' + value);
 					this.plugin.settings.keyName = value;
 					await this.plugin.saveSettings();
 				}));
@@ -109,7 +108,6 @@ class OpenerSettingTab extends PluginSettingTab {
 				.setPlaceholder('http://')
 				.setValue(this.plugin.settings.prodUrl)
 				.onChange(async (value) => {
-					console.log('Prod URL: ' + value);
 					this.plugin.settings.prodUrl = value;
 					await this.plugin.saveSettings();
 				}));
@@ -121,7 +119,6 @@ class OpenerSettingTab extends PluginSettingTab {
 				.setPlaceholder('http://')
 				.setValue(this.plugin.settings.devUrl)
 				.onChange(async (value) => {
-					console.log('Dev URL: ' + value);
 					this.plugin.settings.devUrl = value;
 					await this.plugin.saveSettings();
 				}));
