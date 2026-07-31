@@ -1,4 +1,4 @@
-import { App, parseFrontMatterEntry, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, parseFrontMatterEntry, Plugin, PluginSettingTab, SettingDefinitionItem } from 'obsidian';
 
 interface OpenerSettings {
 	keyName: string;
@@ -26,16 +26,16 @@ export default class Opener extends Plugin {
 			id: 'open-dev-url',
 			name: 'Open page on development site',
 			checkCallback: (checking: boolean) => {
-				let file = this.app.workspace.getActiveFile();
+				const file = this.app.workspace.getActiveFile();
 				if (!file) return false;
 				if (checking) return true;
-				let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-				let name = file.basename;
+				const metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+				const name = file.basename;
 				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
 				if (!permalink) {
 					permalink = name.toLowerCase().split(' ').join('-');
 				}
-				let url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+				const url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
 				openUrl(url);
 				return true;
 			}
@@ -45,16 +45,16 @@ export default class Opener extends Plugin {
 			id: 'open-prod-url',
 			name: 'Open page on live site',
 			checkCallback: (checking: boolean) => {
-				let file = this.app.workspace.getActiveFile();
+				const file = this.app.workspace.getActiveFile();
 				if (!file) return false;
 				if (checking) return true;
-				let metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-				let name = file.basename;
+				const metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+				const name = file.basename;
 				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
 				if (!permalink) {
 					permalink = name.toLowerCase().split(' ').join('-');
 				}
-				let url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+				const url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
 				openUrl(url);
 				return true;
 			}
@@ -85,42 +85,23 @@ class OpenerSettingTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
-	display(): void {
-		const {containerEl} = this;
-
-		containerEl.empty();
-
-		new Setting(containerEl)
-			.setName('Permalink property name')
-			.setDesc('The file property used to populate the page slug')
-			.addText(text => text
-				.setPlaceholder('permalink')
-				.setValue(this.plugin.settings.keyName)
-				.onChange(async (value) => {
-					this.plugin.settings.keyName = value;
-					await this.plugin.saveSettings();
-				}));
-
-		new Setting(containerEl)
-			.setName('Live site base URL')
-			.setDesc('The production URL for your site')
-			.addText(text => text
-				.setPlaceholder('http://')
-				.setValue(this.plugin.settings.prodUrl)
-				.onChange(async (value) => {
-					this.plugin.settings.prodUrl = value;
-					await this.plugin.saveSettings();
-				}));
-
-		new Setting(containerEl)
-			.setName('Development site base URL')
-			.setDesc('The staging URL for your site')
-			.addText(text => text
-				.setPlaceholder('http://')
-				.setValue(this.plugin.settings.devUrl)
-				.onChange(async (value) => {
-					this.plugin.settings.devUrl = value;
-					await this.plugin.saveSettings();
-				}));
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		return [
+			{
+				name: 'Permalink property name',
+				desc: 'The file property used to populate the page slug',
+				control: { type: 'text', key: 'keyName', placeholder: 'permalink' },
+			},
+			{
+				name: 'Live site base URL',
+				desc: 'The production URL for your site',
+				control: { type: 'text', key: 'prodUrl', placeholder: 'http://' },
+			},
+			{
+				name: 'Development site base URL',
+				desc: 'The staging URL for your site',
+				control: { type: 'text', key: 'devUrl', placeholder: 'http://' },
+			},
+		];
 	}
 }
