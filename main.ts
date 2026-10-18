@@ -1,4 +1,5 @@
-import { App, parseFrontMatterEntry, Plugin, PluginSettingTab, SettingDefinitionItem } from 'obsidian';
+import { App, Notice, parseFrontMatterEntry, Plugin, PluginSettingTab, SettingDefinitionItem, TFile } from 'obsidian';
+import { parsePermalinkComment } from './permalink';
 
 interface OpenerSettings {
 	keyName: string;
@@ -29,14 +30,7 @@ export default class Opener extends Plugin {
 				const file = this.app.workspace.getActiveFile();
 				if (!file) return false;
 				if (checking) return true;
-				const metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-				const name = file.basename;
-				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
-				if (!permalink) {
-					permalink = name.toLowerCase().split(' ').join('-');
-				}
-				const url = this.settings.devUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
-				openUrl(url);
+				void this.openPage(file, this.settings.devUrl);
 				return true;
 			}
 		});
@@ -48,19 +42,32 @@ export default class Opener extends Plugin {
 				const file = this.app.workspace.getActiveFile();
 				if (!file) return false;
 				if (checking) return true;
-				const metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
-				const name = file.basename;
-				let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
-				if (!permalink) {
-					permalink = name.toLowerCase().split(' ').join('-');
-				}
-				const url = this.settings.prodUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
-				openUrl(url);
+				void this.openPage(file, this.settings.prodUrl);
 				return true;
 			}
 		});
 
 		this.addSettingTab(new OpenerSettingTab(this.app, this));
+	}
+
+	async openPage(file: TFile, baseUrl: string) {
+		const metadata = this.app.metadataCache.getFileCache(file)?.frontmatter;
+		let permalink = parseFrontMatterEntry(metadata, this.settings.keyName);
+		if (!permalink) {
+			try {
+				const content = await this.app.vault.cachedRead(file);
+				permalink = parsePermalinkComment(content, this.settings.keyName);
+			} catch (error) {
+				console.error('Permalink Opener: could not read note', error);
+				new Notice('Could not read the note to open its permalink.');
+				return;
+			}
+		}
+		if (!permalink) {
+			permalink = file.basename.toLowerCase().split(' ').join('-');
+		}
+		const url = baseUrl.replace(/\/+$/, '') + '/' + permalink.replace(/^\/+/, '');
+		openUrl(url);
 	}
 
 	onunload() {
@@ -89,7 +96,7 @@ class OpenerSettingTab extends PluginSettingTab {
 		return [
 			{
 				name: 'Permalink property name',
-				desc: 'The file property used to populate the page slug',
+				desc: 'The file property or leading HTML comment key used to populate the page path',
 				control: { type: 'text', key: 'keyName', placeholder: 'permalink' },
 			},
 			{
